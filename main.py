@@ -18,7 +18,6 @@ def F(x, y):
 
 
 def plot_3d(ax, pop):
-    # 原来的绘图逻辑是正确的，这里我们稍微修改一下以体现每个代的变化
     X = np.linspace(*X_BOUND, 100)
     Y = np.linspace(*Y_BOUND, 100)
     X, Y = np.meshgrid(X, Y)
@@ -29,7 +28,6 @@ def plot_3d(ax, pop):
     ax.set_ylabel('y')
     ax.set_zlabel('z')
 
-    # 这里我们加入种群的散点图
     x, y = translateDNA(pop)
     fitness = get_fitness(pop)
     ax.scatter(x, y, F(x, y), c='black', s=20 * fitness / fitness.max())
@@ -38,8 +36,7 @@ def plot_3d(ax, pop):
 def get_fitness(pop):
     x, y = translateDNA(pop)
     pred = F(x, y)
-    return (pred - np.min(
-        pred)) + 1e-3  # 减去最小的适应度是为了防止适应度出现负数，通过这一步fitness的范围为[0, np.max(pred)-np.min(pred)],最后在加上一个很小的数防止出现为0的适应度
+    return (pred - np.min(pred)) + 1e-3  # 减去最小的适应度是为了防止适应度出现负数，通过这一步fitness的范围为[0, np.max(pred)-np.min(pred)],最后在加上一个很小的数防止出现为0的适应度
 
 
 def translateDNA(pop):  # pop表示种群矩阵，一行表示一个二进制编码表示的DNA，矩阵的行数为种群数目
@@ -54,13 +51,13 @@ def translateDNA(pop):  # pop表示种群矩阵，一行表示一个二进制编
 
 def crossover_and_mutation(pop, CROSSOVER_RATE=0.8):
     new_pop = []
-    for father in pop:  # 遍历种群中的每一个个体，将该个体作为父亲
-        child = father  # 孩子先得到父亲的全部基因（这里我把一串二进制串的那些0，1称为基因）
-        if np.random.rand() < CROSSOVER_RATE:  # 产生子代时不是必然发生交叉，而是以一定的概率发生交叉
-            mother = pop[np.random.randint(POP_SIZE)]  # 再种群中选择另一个个体，并将该个体作为母亲
-            cross_points = np.random.randint(low=0, high=DNA_SIZE * 2)  # 随机产生交叉的点
-            child[cross_points:] = mother[cross_points:]  # 孩子得到位于交叉点后的母亲的基因
-        mutation(child)  # 每个后代有一定的机率发生变异
+    for father in pop: 
+        child = father 
+        if np.random.rand() < CROSSOVER_RATE:  
+            mother = pop[np.random.randint(POP_SIZE)] 
+            cross_points = np.random.randint(low=0, high=DNA_SIZE * 2)  
+            child[cross_points:] = mother[cross_points:] 
+        mutation(child)  
         new_pop.append(child)
 
     return new_pop
@@ -73,8 +70,7 @@ def mutation(child, MUTATION_RATE=0.003):
 
 
 def select(pop, fitness):  # nature selection wrt pop's fitness
-    idx = np.random.choice(np.arange(POP_SIZE), size=POP_SIZE, replace=True,
-                           p=(fitness) / (fitness.sum()))
+    idx = np.random.choice(np.arange(POP_SIZE), size=POP_SIZE, replace=True,p=(fitness) / (fitness.sum()))
     return pop[idx]
 
 
