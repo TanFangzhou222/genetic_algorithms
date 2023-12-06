@@ -55,6 +55,7 @@ def crossover_and_mutation(pop, CROSSOVER_RATE=0.8):
         child = father 
         if np.random.rand() < CROSSOVER_RATE:  
             mother = pop[np.random.randint(POP_SIZE)] 
+            # 随机选择交叉点
             cross_points = np.random.randint(low=0, high=DNA_SIZE * 2)  
             child[cross_points:] = mother[cross_points:] 
         mutation(child)  
